@@ -29,7 +29,7 @@ class AcdcDataset(Dataset):
             if f.split("_frame")[0] in keys:
                 slices = subfiles(join(args.data_dir, f))
                 for sl in slices:
-                    self.files.append(sl)
+                    self.files.append(sl)  # Dataset folder
 
         print(f'dataset length: {len(self.files)}')
 
@@ -38,7 +38,7 @@ class AcdcDataset(Dataset):
 
     def __getitem__(self, index):
         img = Image.open(self.files[index])
-        label = Image.open(self.files[index].replace('imgs/', 'annotations/'))
+        label = Image.open(self.files[index].replace('imgs/', 'annotations/'))   
         label = np.asarray(label)
         # scribble = Image.open(self.files[index].replace('imgs/', 'scribbles/'))
         # scribble = np.asarray(scribble)
