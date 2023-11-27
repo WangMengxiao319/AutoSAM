@@ -39,3 +39,6 @@ _darcs
 # downloaded dataset
 dataset/annotations
 dataset/imgs
+
+# output
+output_experiment

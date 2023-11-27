@@ -1,3 +1,5 @@
+import sys
+sys.path.append('/home/lzy/mancy/AutoSAM')
 import argparse
 import builtins
 import math
@@ -26,7 +28,9 @@ import torchvision.datasets as datasets
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import torchvision.models as models
+from tqdm import tqdm
 
+print('打印当前路径',sys.path)
 
 from loss_functions.dice_loss import SoftDiceLoss
 from loss_functions.metrics import dice_pytorch, SegmentationMetric
@@ -39,7 +43,7 @@ from evaluate import test_synapse, test_acdc, test_brats
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 
 
-parser.add_argument('-j', '--workers', default=32, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=24, type=int, metavar='N',
                     help='number of data loading workers (default: 32)')
 parser.add_argument('--epochs', default=120, type=int, metavar='N',
                     help='number of total epochs to run')
@@ -100,6 +104,7 @@ parser.add_argument("--dataset", type=str, default="synapse")
 
 
 def main():
+
     args = parser.parse_args()
 
     if args.seed is not None:
@@ -239,7 +244,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     best_loss = 100
 
-    for epoch in range(args.start_epoch, args.epochs):
+    for epoch in tqdm(range(args.start_epoch, args.epochs),total=args.epochs-args.start_epoch):
         is_best = False
         if args.distributed:
             train_sampler.set_epoch(epoch)
@@ -255,13 +260,13 @@ def main_worker(gpu, ngpus_per_node, args):
             is_best = True
             best_loss = loss
 
-        # if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-        #         and args.rank % ngpus_per_node == 0):
-        #     save_checkpoint({
-        #         'epoch': epoch + 1,
-        #         'state_dict': model.module.mask_decoder.state_dict(),
-        #         'optimizer' : optimizer.state_dict(),
-        #     }, is_best=is_best, filename=filename)
+        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+                and args.rank % ngpus_per_node == 0):
+            save_checkpoint({
+                'epoch': epoch + 1,
+                'state_dict': model.module.mask_decoder.state_dict(),
+                'optimizer' : optimizer.state_dict(),
+            }, is_best=is_best, filename=filename)
     test(model, args)
     if args.dataset == 'synapse':
         test_synapse(args)
@@ -446,7 +451,7 @@ def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     # torch.save(state, filename)
     if is_best:
         torch.save(state, filename)
-        shutil.copyfile(filename, 'model_best.pth.tar')
+        shutil.copyfile(filename, 'model_best.pth.tar')  # 如果is_best为True，那么会使用shutil库的copyfile函数来将检查点文件（filename）复制为model_best.pth.tar文件
 
 
 class AverageMeter(object):
@@ -520,7 +525,7 @@ def accuracy(output, target, topk=(1,)):
 
 
 if __name__ == '__main__':
-    main()
 
+    main()
     # python main_moco.py --data_dir ./data/mmwhs/ --do_contrast --dist-url 'tcp://localhost:10001'
     # --multiprocessing-distributed --world-size 1 --rank 0

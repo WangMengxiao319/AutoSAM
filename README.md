@@ -41,6 +41,15 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} \
 --b 4 --dataset ACDC --gpu ${gpu} \
 --fold ${fold} --tr_size ${tr_size}  --model_type ${model_type} --num_classes 4
 ```
+**eg. my terminal**
+```windows
+python scripts/main_autosam_seg.py --src_dir dataset --data_dir dataset\imgs\ --save_dir .\output_dir --b 4 --dataset ACDC --gpu 0 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
+```
+```ubuntu
+python scripts/main_autosam_seg.py --src_dir dataset --data_dir dataset/imgs/ --save_dir ./output_dir --b 4 --dataset ACDC --gpu 1 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
+
+```
+
 This repo also supports distributed training
 ```
 python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} --dist-url 'tcp://localhost:10002' \
@@ -48,6 +57,7 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} --dist-url 'tcp://lo
 --multiprocessing-distributed --world-size 1 --rank 0  -b 4 --dataset ACDC \
 --fold ${fold} --tr_size ${tr_size}  --model_type ${model_type} --num_classes 4
 ```
+
 ## Todo
 * Evaluate on more datasets
 * Add more baselines

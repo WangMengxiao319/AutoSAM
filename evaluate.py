@@ -22,7 +22,7 @@ def dice(pred, label):
 
 def hd(pred, gt):
     if pred.sum() > 0 and gt.sum() > 0:
-        hd95 = metric.binary.hd95(pred, gt)
+        hd95 = metric.binary.hd95(pred, gt) # HD95指标（Hausdorff Distance 95）
         return hd95
     else:
         return 0
@@ -359,5 +359,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     args = parser.parse_args()
-    args.save_dir = 'output_experiment/sam_unet_seg_ACDC_f0_tr_75'
+    args.save_dir = 'output_experiment/output_dir'
     test_acdc(args)

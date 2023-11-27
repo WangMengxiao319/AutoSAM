@@ -22,6 +22,7 @@ class AcdcDataset(Dataset):
     def __init__(self, keys, args, mode='train'):
         super().__init__()
         self.patch_size = (args.img_size, args.img_size)
+        print(f'patch size: {self.patch_size}')
         self.files = []
         self.mode = mode
 
@@ -31,19 +32,29 @@ class AcdcDataset(Dataset):
                 for sl in slices:
                     self.files.append(sl)  # Dataset folder
 
-        print(f'dataset length: {len(self.files)}')
+        print(f'dataset length: {len(self.files)}') 
 
     def __len__(self):
         return len(self.files)
 
     def __getitem__(self, index):
         img = Image.open(self.files[index])
-        label = Image.open(self.files[index].replace('imgs/', 'annotations/'))   
+        label = Image.open(self.files[index].replace('imgs', 'annotations'))   
         label = np.asarray(label)
         # scribble = Image.open(self.files[index].replace('imgs/', 'scribbles/'))
         # scribble = np.asarray(scribble)
+
         img = np.asarray(img).astype(np.float32).transpose([2, 0, 1])
+        # img = np.asarray(img).astype(np.float32)
         img = (img - img.min()) / (img.max() - img.min())
+        # print(img.shape, label.shape)
+        # 绘制label
+        # import matplotlib.pyplot as plt
+        # plt.imshow(label)  
+        # plt.show()
+        # print(np.unique(img))
+        # print(np.unique(label))
+
         if self.mode == 'contrast':
             img1, img2 = self.transform_contrast(img)
             return img1, img2
@@ -103,7 +114,9 @@ class AcdcDataset(Dataset):
                 NumpyToTensor(),
             ]
             aug = Compose(aug_list)
-
+        # print('data_shape',data_dict.get('data').shape)
+        # print('seg_shape',data_dict.get('seg').shape)
+        # print(aug)
         data_dict = aug(**data_dict)
         img = data_dict.get('data')[0]
         label = data_dict.get('seg')[0]

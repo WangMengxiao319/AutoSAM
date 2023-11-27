@@ -2,7 +2,7 @@ import os
 import pickle
 from dataset.Synapse import SynapseDataset
 from dataset.ACDC import AcdcDataset
-from dataset.SliceLoader import SliceDataset
+# from dataset.SliceLoader import SliceDataset
 import torch
 
 
@@ -27,6 +27,10 @@ def generate_dataset(args):
         train_ds = AcdcDataset(keys=tr_keys, mode='train', args=args)
         val_ds = AcdcDataset(keys=val_keys, mode='val', args=args)
         test_ds = AcdcDataset(keys=test_keys, mode='val', args=args)
+    elif args.dataset == 'arcade' or args.dataset == 'ARCADE':
+        args.img_size = 224
+        # TODO: add arcade dataset
+        
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)
 
