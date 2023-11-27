@@ -148,42 +148,47 @@ def convert_acdc_to_imgs(data_dir, output_dir):
     label_dir = join(output_dir, 'annotations')
 
     patient_list = os.listdir(data_dir)
+    # patient_list = patient_list[:2]
     for ppl in patient_list:
+        print(ppl)
         files_list = os.listdir(join(data_dir, ppl))
         for f in files_list:
             f = f.split(".")[0]
+            if ("frame" in f) and ("gt" not in f):
+                modified_f = f.replace('patient', 'patient_').replace('frame', 'frame_')
+                frame_and_after = 'frame'+ modified_f.split('frame', 1)[-1].lstrip('0')
+                target_img_dir = join(img_dir, modified_f)
+                target_label_dir = join(label_dir, modified_f)
+                if not os.path.exists(target_img_dir):
+                    os.makedirs(join(target_img_dir))
+                    os.makedirs(join(target_label_dir))
+                    print('Created' + target_img_dir + '...')
 
-            target_img_dir = join(img_dir, ppl + "_" + f)
-            target_label_dir = join(label_dir, ppl + "_" + f)
-            if not os.path.exists(target_img_dir):
-                os.makedirs(join(target_img_dir))
-                os.makedirs(join(target_label_dir))
-                print('Created' + target_img_dir + '...')
+                # data = np.load(os.path.join(data_dir, ppl, f + ".npy"))
+                image = read_nii(join(data_dir, ppl, f + ".nii.gz"))
+                label = read_nii(join(data_dir, ppl, f + "_gt.nii.gz"))
 
-            data = np.load(os.path.join(data_dir, ppl, f + ".npy"))
+                for i in range(image.shape[0]):
+                    img_array = (image[i] - image.min()) / (image.max() - image.min())
+                    img_array = np.clip(img_array * 255, 0, 255).astype('uint8')   # 映射到0到255
+                    label_array = label[i].astype('uint8')
+                    # print(np.unique(img_array))
+                    # print(np.unique(label_array))
+                    if i < 10:
+                        save_files = frame_and_after + "_00" + str(i) + ".png"
+                    elif 10 <= i < 100:
+                        save_files = frame_and_after + "_0" + str(i) + ".png"
+                    else:
+                        save_files = frame_and_after + "_" + str(i) + ".png"
 
-            image = data[0]
-            label = data[1]
+                    im = Image.fromarray(img_array)
+                    new_p = im.convert('RGB')
+                    new_p.save(join(target_img_dir, save_files))
 
-            for i in range(image.shape[0]):
-                img_array = (image[i] - image.min()) / (image.max() - image.min())
-                img_array = np.clip(img_array * 127.5, 0, 255).astype('uint8')
-                label_array = label[i].astype('uint8')
-                if i < 10:
-                    save_files = f + "_00" + str(i) + ".png"
-                elif 10 <= i < 100:
-                    save_files = f + "_0" + str(i) + ".png"
-                else:
-                    save_files = f + "_" + str(i) + ".png"
+                    lb = Image.fromarray(label_array)
+                    lb.save(join(target_label_dir, save_files))
 
-                im = Image.fromarray(img_array)
-                new_p = im.convert('RGB')
-                new_p.save(join(target_img_dir, save_files))
-
-                lb = Image.fromarray(label_array)
-                lb.save(join(target_label_dir, save_files))
-
-            print("finishing saving", f)
+                print("finishing saving", f)
 
 
 def convert_scribbles_to_imgs(data_dir, output_dir):
@@ -247,11 +252,11 @@ def save_as_slices(input_dir, output_dir):
 
 
 if __name__ == "__main__":
-    data_dir = "../../../DATA/brats_t1/preprocessed"
-    # data_dir = "../../../DATA/ACDC/acdc_scribbles"
-    # output_dir = "../../../DATA/synapse"
-    output_dir = "../../../DATA/brats"
-    convert_npz_to_imgs(data_dir, output_dir)
+    # data_dir = "../../../DATA/brats_t1/preprocessed"
+    # # data_dir = "../../../DATA/ACDC/acdc_scribbles"
+    # # output_dir = "../../../DATA/synapse"
+    # output_dir = "../../../DATA/brats"
+    # convert_npz_to_imgs(data_dir, output_dir)
     # file_list = os.listdir(output_dir)
     # for f in file_list:
     #     slices = os.listdir(join(output_dir, f))
@@ -259,3 +264,6 @@ if __name__ == "__main__":
     #         new_slice = slice[0:5] + "_" + slice[5:]
     #         print(new_slice)
     #         os.rename(join(output_dir, f, slice), join(output_dir, f, new_slice))
+    data_dir = 'D:/Filez/dataset/ACDC/raw/training'
+    output_dir = 'D:/Filez/dataset/ACDC/processed'
+    convert_acdc_to_imgs(data_dir, output_dir)
