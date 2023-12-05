@@ -43,10 +43,10 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} \
 ```
 **eg. my terminal**
 ```windows
-python scripts/main_autosam_seg.py --src_dir dataset --data_dir dataset\imgs\ --save_dir .\output_dir --b 4 --dataset ACDC --gpu 0 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
+python scripts/main_autosam_seg.py --src_dir dataset\ACDC --data_dir dataset\ACDC\imgs\ --save_dir .\output_dir\ACDC --b 4 --dataset ACDC --gpu 0 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
 ```
 ```ubuntu
-python scripts/main_autosam_seg.py --src_dir dataset --data_dir dataset/imgs/ --save_dir ./output_dir --b 4 --dataset ACDC --gpu 1 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
+python scripts/main_autosam_seg.py --src_dir dataset/ACDC --data_dir dataset/ACDC/imgs/ --save_dir ./output_dir/ACDC --b 4 --dataset ACDC --gpu 1 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
 
 ```
 

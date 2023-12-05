@@ -147,8 +147,11 @@ def create_splits_1(output_dir, image_dir, test_dir):
 
 
 if __name__ == "__main__":
-    root_dir = "../../../DATA/brats"
-    image_dir = "../../../DATA/brats/imgs"
-    create_acdc_folds(root_dir, image_dir)
-
+    # root_dir = "D:/Filez/research/experiment/AutoSAM/dataset/LP_CTA"
+    # image_dir = "D:/Filez/dataset/LiPing_multi_modal/CTA dataset/processed_without_stent/imgs"
+    # create_acdc_folds(root_dir, image_dir)
+    splits_dir = "D:/Filez/research/experiment/AutoSAM/dataset/ACDC/splits.pkl"
+    with open(splits_dir, "rb") as f:
+        splits = pickle.load(f)
+    print(splits[0])
 

@@ -2,6 +2,7 @@ import os
 import pickle
 from dataset.Synapse import SynapseDataset
 from dataset.ACDC import AcdcDataset
+from dataset.LP_CTA import LP_CTA_Dataset
 # from dataset.SliceLoader import SliceDataset
 import torch
 
@@ -31,7 +32,10 @@ def generate_dataset(args):
         args.img_size = 224
         # TODO: add arcade dataset
     elif args.dataset == 'LP_CTA':
-        pass # TODO: add LP_CTA dataset
+        args.img_size = 224
+        train_ds = LP_CTA_Dataset(keys=tr_keys, mode='train', args=args)
+        val_ds = LP_CTA_Dataset(keys=val_keys, mode='val', args=args)
+        test_ds = LP_CTA_Dataset(keys=test_keys, mode='val', args=args)
         
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)

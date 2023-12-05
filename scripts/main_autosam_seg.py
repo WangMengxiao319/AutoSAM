@@ -89,12 +89,12 @@ parser.add_argument('--model_type', type=str, default="vit_l", help='path to spl
 parser.add_argument('--src_dir', type=str, default=None, help='path to splits file')
 parser.add_argument('--data_dir', type=str, default=None, help='path to datafolder')
 parser.add_argument("--img_size", type=int, default=256)
-parser.add_argument("--classes", type=int, default=8)
+parser.add_argument("--classes", type=int, default=8,help='似乎没用到')
 parser.add_argument("--do_contrast", default=False, action='store_true')
 parser.add_argument("--slice_threshold", type=float, default=0.05)
 parser.add_argument("--num_classes", type=int, default=14)
 parser.add_argument("--fold", type=int, default=0)
-parser.add_argument("--tr_size", type=int, default=1)
+parser.add_argument("--tr_size", type=int, default=1, help='number of training images')  # TODO: 只用一个人的训练样本
 parser.add_argument("--save_dir", type=str, default=None)
 parser.add_argument("--load_saved_model", action='store_true',
                         help='whether freeze encoder of the segmenter')

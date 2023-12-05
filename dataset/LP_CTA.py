@@ -18,7 +18,7 @@ from batchgenerators.transforms.utility_transforms import NumpyToTensor
 join = os.path.join
 
 
-class AcdcDataset(Dataset):
+class LP_CTA_Dataset(Dataset):
     def __init__(self, keys, args, mode='train'):
         super().__init__()
         self.patch_size = (args.img_size, args.img_size)
@@ -40,7 +40,7 @@ class AcdcDataset(Dataset):
     def __getitem__(self, index):
         img = Image.open(self.files[index])
         label = Image.open(self.files[index].replace('imgs', 'annotations'))   
-        label = np.asarray(label)
+        label = np.asarray(label)/255
         # scribble = Image.open(self.files[index].replace('imgs/', 'scribbles/'))
         # scribble = np.asarray(scribble)
 
@@ -52,8 +52,7 @@ class AcdcDataset(Dataset):
         # import matplotlib.pyplot as plt
         # plt.imshow(label)  
         # plt.show()
-        # print(np.unique(img))
-        # print(np.unique(label))
+
 
         if self.mode == 'contrast':
             img1, img2 = self.transform_contrast(img)
@@ -128,9 +127,9 @@ if __name__ == '__main__':
     import argparse
     import matplotlib.pyplot as plt
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_dir', type=str, default='dataset/ACDC/imgs/')
+    parser.add_argument('--data_dir', type=str, default='dataset/LP_CTA/imgs/')
     parser.add_argument('--fold', type=int, default=0)
-    parser.add_argument('--src_dir', type=str, default='dataset/ACDC/')
+    parser.add_argument('--src_dir', type=str, default='dataset/LP_CTA/')
     parser.add_argument('--img_size', type=int, default=224)
     parser.add_argument("--tr_size", type=int, default=1)
     
@@ -149,11 +148,11 @@ if __name__ == '__main__':
     print(val_keys)
     print(test_keys)
 
-    dataset = AcdcDataset(keys=tr_keys, mode='train', args=args)
+    dataset = LP_CTA_Dataset(keys=tr_keys, mode='train', args=args)
     print(len(dataset))
     img1, img2 = dataset[0]
     print(np.unique(img1))
-    print(np.unique(img2)) # [0. 1. 2. 3.]
+    print(np.unique(img2)) # [0. 1.]
     print(img1.shape, img2.shape)   # torch.Size([3, 224, 224]) torch.Size([1, 224, 224])
     plt.imshow(img1[0], cmap='gray')
     plt.show()

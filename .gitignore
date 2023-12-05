@@ -38,5 +38,6 @@ _darcs
 
 # downloaded dataset
 dataset/ACDC
+dataset/LP_CTA
 # output
 output_experiment
