@@ -30,6 +30,8 @@ def generate_dataset(args):
     elif args.dataset == 'arcade' or args.dataset == 'ARCADE':
         args.img_size = 224
         # TODO: add arcade dataset
+    elif args.dataset == 'LP_CTA':
+        pass # TODO: add LP_CTA dataset
         
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)

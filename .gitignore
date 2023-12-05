@@ -37,8 +37,6 @@ model_ts*.txt
 _darcs
 
 # downloaded dataset
-dataset/annotations
-dataset/imgs
-
+dataset/ACDC
 # output
 output_experiment
