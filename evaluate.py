@@ -153,10 +153,6 @@ def test_acdc(args):
         fw.write('Dice_rv: {:.4f}\n'.format(Dice_rv[-1]))
         fw.write('Dice_myo: {:.4f}\n'.format(Dice_myo[-1]))
         fw.write('Dice_lv: {:.4f}\n'.format(Dice_lv[-1]))
-        fw.write('hd_rv: {:.4f}\n'.format(hd_rv[-1]))
-        fw.write('hd_myo: {:.4f}\n'.format(hd_myo[-1]))
-        fw.write('hd_lv: {:.4f}\n'.format(hd_lv[-1]))
-        fw.write('*' * 20 + '\n')
 
     # fw.write('*'*20+'\n')
     # fw.write('Mean_hd\n')
@@ -196,6 +192,64 @@ def test_acdc(args):
         for line in lines:
             print(line)
 
+def test_LP_CTA(args):
+    label_list = sorted(glob.glob(os.path.join(args.save_dir, 'label', '*nii')))
+    infer_list = sorted(glob.glob(os.path.join(args.save_dir, 'infer', '*nii')))
+
+    Dice_plaque = []
+
+    hd_plaque = []
+
+
+    def process_label(label):
+        plaque = label == 1
+
+        return plaque
+
+    fw = open(args.save_dir + '/dice_pre.txt', 'a')
+
+    for label_path, infer_path in zip(label_list, infer_list):
+        print(label_path.split('/')[-1])
+        print(infer_path.split('/')[-1])
+        label = read_nii(label_path)
+        infer = read_nii(infer_path)
+        label_plaque, = process_label(label)
+        infer_plaque,  = process_label(infer)
+
+        Dice_plaque.append(dice(infer_plaque, label_plaque))
+
+        hd_plaque.append(hd(infer_plaque, label_plaque))
+
+        fw.write('*' * 20 + '\n', )
+        fw.write(infer_path.split('/')[-1] + '\n')
+        fw.write('hd_plaque: {:.4f}\n'.format(hd_plaque[-1]))
+
+        # fw.write('*'*20+'\n')
+        fw.write('*' * 20 + '\n', )
+        fw.write(infer_path.split('/')[-1] + '\n')
+        fw.write('Dice_plaque: {:.4f}\n'.format(Dice_plaque[-1]))
+
+    # fw.write('*'*20+'\n')
+    # fw.write('Mean_hd\n')
+    # fw.write('hd_rv'+str(np.mean(hd_rv))+'\n')
+    # fw.write('hd_myo'+str(np.mean(hd_myo))+'\n')
+    # fw.write('hd_lv'+str(np.mean(hd_lv))+'\n')
+    # fw.write('*'*20+'\n')
+
+    fw.write('*' * 20 + '\n')
+    fw.write('Mean_Dice\n')
+    fw.write('Dice_plaque' + str(np.mean(Dice_plaque)) + '\n')
+
+    fw.write('Mean_HD\n')
+    fw.write('hd_plaque' + str(np.mean(hd_plaque)) + '\n')
+    fw.write('*' * 20 + '\n')
+
+    print('done')
+    fw.close()
+    with open(args.save_dir + '/dice_pre.txt', 'r') as f:
+        lines = f.read().splitlines()
+        for line in lines:
+            print(line)
 
 def test_synapse(args):
     label_list = sorted(glob.glob(os.path.join(args.save_dir, 'label', '*nii')))

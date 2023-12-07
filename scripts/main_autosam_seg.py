@@ -37,7 +37,7 @@ from loss_functions.metrics import dice_pytorch, SegmentationMetric
 
 from models import sam_seg_model_registry
 from dataset import generate_dataset, generate_test_loader
-from evaluate import test_synapse, test_acdc, test_brats
+from evaluate import test_synapse, test_acdc, test_brats, test_LP_CTA
 
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
@@ -260,13 +260,13 @@ def main_worker(gpu, ngpus_per_node, args):
             is_best = True
             best_loss = loss
 
-        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-                and args.rank % ngpus_per_node == 0):
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'state_dict': model.module.mask_decoder.state_dict(),
-                'optimizer' : optimizer.state_dict(),
-            }, is_best=is_best, filename=filename)
+        # if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+        #         and args.rank % ngpus_per_node == 0):
+        #     save_checkpoint({
+        #         'epoch': epoch + 1,
+        #         'state_dict': model.module.mask_decoder.state_dict(),
+        #         'optimizer' : optimizer.state_dict(),
+        #     }, is_best=is_best, filename=filename)
     test(model, args)
     if args.dataset == 'synapse':
         test_synapse(args)
@@ -274,6 +274,8 @@ def main_worker(gpu, ngpus_per_node, args):
         test_acdc(args)
     elif args.dataset == 'brats':
         test_brats(args)
+    elif args.dataset == 'LP_CTA':
+        test_LP_CTA(args)
 
 
 def train(train_loader, model, optimizer, scheduler, epoch, args, writer):

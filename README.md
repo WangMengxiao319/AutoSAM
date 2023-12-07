@@ -42,6 +42,7 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} \
 --fold ${fold} --tr_size ${tr_size}  --model_type ${model_type} --num_classes 4
 ```
 **eg. my terminal**
+#### ACDC
 ```windows
 python scripts/main_autosam_seg.py --src_dir dataset\ACDC --data_dir dataset\ACDC\imgs\ --save_dir .\output_dir\ACDC --b 4 --dataset ACDC --gpu 0 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
 ```
@@ -49,6 +50,8 @@ python scripts/main_autosam_seg.py --src_dir dataset\ACDC --data_dir dataset\ACD
 python scripts/main_autosam_seg.py --src_dir dataset/ACDC --data_dir dataset/ACDC/imgs/ --save_dir ./output_dir/ACDC --b 4 --dataset ACDC --gpu 1 --fold 1 --tr_size 1 --model_type vit_l --num_classes 4
 
 ```
+#### LP_CTA
+python scripts/main_autosam_seg.py --src_dir dataset/LP_CTA --data_dir dataset/LP_CTA/imgs/ --save_dir ./output_dir/LP_CTA --b 4 --dataset LP_CTA --gpu 1 --fold 1 --tr_size 1 --model_type vit_l --num_classes 2
 
 This repo also supports distributed training
 ```
@@ -57,10 +60,9 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} --dist-url 'tcp://lo
 --multiprocessing-distributed --world-size 1 --rank 0  -b 4 --dataset ACDC \
 --fold ${fold} --tr_size ${tr_size}  --model_type ${model_type} --num_classes 4
 ```
+## Notes( by Mancy)
+- 李萍老师数据集，第74个病人，只有img，每天annotations。Errno 2 No such file or directory: 'dataset/LP_CTA/annotations/74/patient_074_frame_124.png'
 
-## Todo
-* Evaluate on more datasets
-* Add more baselines
 
 ## Citation
 If you find our codes useful, please cite

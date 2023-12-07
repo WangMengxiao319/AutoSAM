@@ -70,6 +70,8 @@ def generate_test_loader(key, args):
     if args.dataset == 'acdc' or args.dataset == 'ACDC':
         args.img_size = 224
         test_ds = AcdcDataset(keys=key, mode='val', args=args)
+    elif args.dataset == 'LP_CTA':
+        test_ds = LP_CTA_Dataset(keys=key, mode='val', args=args)
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)
 
@@ -103,6 +105,10 @@ def generate_contrast_dataset(args):
         args.img_size = 224
         train_ds = AcdcDataset(keys=tr_keys, mode='contrast', args=args)
         val_ds = AcdcDataset(keys=val_keys, mode='contrast', args=args)
+    elif args.dataset == 'LP_CTA':
+        args.img_size = 224
+        train_ds = LP_CTA_Dataset(keys=tr_keys, mode='contrast', args=args)
+        val_ds = LP_CTA_Dataset(keys=val_keys, mode='contrast', args=args)
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)
 
