@@ -213,8 +213,8 @@ def test_LP_CTA(args):
         print(infer_path.split('/')[-1])
         label = read_nii(label_path)
         infer = read_nii(infer_path)
-        label_plaque, = process_label(label)
-        infer_plaque,  = process_label(infer)
+        label_plaque = process_label(label)
+        infer_plaque = process_label(infer)
 
         Dice_plaque.append(dice(infer_plaque, label_plaque))
 
@@ -224,8 +224,6 @@ def test_LP_CTA(args):
         fw.write(infer_path.split('/')[-1] + '\n')
         fw.write('hd_plaque: {:.4f}\n'.format(hd_plaque[-1]))
 
-        # fw.write('*'*20+'\n')
-        fw.write('*' * 20 + '\n', )
         fw.write(infer_path.split('/')[-1] + '\n')
         fw.write('Dice_plaque: {:.4f}\n'.format(Dice_plaque[-1]))
 
@@ -413,5 +411,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     args = parser.parse_args()
-    args.save_dir = 'output_experiment/output_dir'
-    test_acdc(args)
+    # args.save_dir = 'output_experiment/output_dir'
+    # test_acdc(args)
+    args.save_dir = 'output_experiment/output_dir/LP_CTA'
+    test_LP_CTA(args)
+

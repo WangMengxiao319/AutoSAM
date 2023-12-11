@@ -61,7 +61,9 @@ python scripts/main_autosam_seg.py --src_dir ${ACDC_folder} --dist-url 'tcp://lo
 --fold ${fold} --tr_size ${tr_size}  --model_type ${model_type} --num_classes 4
 ```
 ## Notes( by Mancy)
-- 李萍老师数据集，第74个病人，只有img，每天annotations。Errno 2 No such file or directory: 'dataset/LP_CTA/annotations/74/patient_074_frame_124.png'
+数据集缺失的条目：
+- 'dataset/LP_CTA/annotations/74/patient_074_frame_124.png'
+- 'dataset/LP_CTA/annotations/169/patient_169_frame_112.png'
 
 
 ## Citation

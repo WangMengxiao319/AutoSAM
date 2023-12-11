@@ -71,6 +71,7 @@ def generate_test_loader(key, args):
         args.img_size = 224
         test_ds = AcdcDataset(keys=key, mode='val', args=args)
     elif args.dataset == 'LP_CTA':
+        args.img_size = 224
         test_ds = LP_CTA_Dataset(keys=key, mode='val', args=args)
     else:
         raise NotImplementedError("dataset is not supported:", args.dataset)

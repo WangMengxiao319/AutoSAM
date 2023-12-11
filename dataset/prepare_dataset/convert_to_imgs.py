@@ -194,7 +194,7 @@ def convert_acdc_to_imgs(data_dir, output_dir):
                 print("finishing saving", f)
 
 def convert_nrrd_to_imgs(data_dir, output_dir):
-    '''load nrrd files and convert to png images'''
+    '''(适用于李萍老师的CTA数据集）load nrrd files and convert to png images'''
     img_dir = join(output_dir, 'imgs')
     label_dir = join(output_dir, 'annotations')
     patient_list = os.listdir(data_dir)
@@ -263,6 +263,50 @@ def convert_nrrd_to_imgs(data_dir, output_dir):
                         new_p.save(join(target_img_dir, save_files))
                     
                     print("finishing saving", f)
+
+def check_difference_imgs_annotations(root_folder):
+    # 用于保存删除文件路径的列表
+    deleted_files_list = []
+    # 找出imgs和annotations文件夹的子文件夹列表
+    imgs_folder = os.path.join(root_folder, 'imgs')
+    annotations_folder = os.path.join(root_folder, 'annotations')
+
+    imgs_subfolders = [subfolder for subfolder in os.listdir(imgs_folder) if os.path.isdir(os.path.join(imgs_folder, subfolder))]
+    annotations_subfolders = [subfolder for subfolder in os.listdir(annotations_folder) if os.path.isdir(os.path.join(annotations_folder, subfolder))]
+
+    for subfolder in imgs_subfolders:
+        imgs_subfolder_path = os.path.join(imgs_folder, subfolder)
+        annotations_subfolder_path = os.path.join(annotations_folder, subfolder)
+
+        imgs_files = set(os.listdir(imgs_subfolder_path))
+        annotations_files = set(os.listdir(annotations_subfolder_path))
+
+        # 找出imgs和annotations文件夹中不共有的图片
+        unique_imgs = imgs_files.difference(annotations_files)
+        unique_annotations = annotations_files.difference(imgs_files)
+
+        # 删除不共有的图片，并记录文件路径
+        for filename in unique_imgs:
+            if filename.endswith('.png'):
+                file_path = os.path.join(imgs_subfolder_path, filename)
+                os.remove(file_path)
+                deleted_files_list.append(file_path)
+                print(f"Deleted: {file_path}")
+
+        for filename in unique_annotations:
+            if filename.endswith('.png'):
+                file_path = os.path.join(annotations_subfolder_path, filename)
+                os.remove(file_path)
+                deleted_files_list.append(file_path)
+                print(f"Deleted: {file_path}")
+
+    # 将删除文件路径列表保存到txt文件
+    txt_file_path = os.path.join(root_folder,'deleted_files.txt')
+    with open(txt_file_path, 'w') as file:
+        for file_path in deleted_files_list:
+            file.write(f"{file_path}\n")
+
+    print(f"Deleted files paths saved to: {txt_file_path}")
 
 
 def convert_scribbles_to_imgs(data_dir, output_dir):
@@ -347,4 +391,5 @@ if __name__ == "__main__":
     ### process LiPing_CTA dataset
     data_dir = 'D:/Filez/dataset/LiPing_multi_modal/CTA dataset/已标注（未植入支架）'
     output_dir = 'D:/Filez/dataset/LiPing_multi_modal/CTA dataset/processed_without_stent'
-    convert_nrrd_to_imgs(data_dir, output_dir)
+    # convert_nrrd_to_imgs(data_dir, output_dir)
+    check_difference_imgs_annotations(output_dir)

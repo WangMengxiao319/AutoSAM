@@ -132,7 +132,15 @@ if __name__ == '__main__':
     parser.add_argument('--src_dir', type=str, default='dataset/LP_CTA/')
     parser.add_argument('--img_size', type=int, default=224)
     parser.add_argument("--tr_size", type=int, default=1)
-    
+    parser.add_argument('-b', '--batch-size', default=4, type=int,
+                        metavar='N',
+                        help='mini-batch size (default: 256), this is the total '
+                            'batch size of all GPUs on the current node when '
+                            'using Data Parallel or Distributed Data Parallel')
+    parser.add_argument('-j', '--workers', default=24, type=int, metavar='N',
+                        help='number of data loading workers (default: 32)')
+    parser.add_argument('--gpu', default=0, type=int,
+                    help='GPU id to use.')
     args = parser.parse_args()
     split_dir = os.path.join(args.src_dir, "splits.pkl")
     with open(split_dir, "rb") as f:
@@ -158,3 +166,18 @@ if __name__ == '__main__':
     plt.show()
     plt.imshow(img2[0],cmap='gray')
     plt.show()
+
+    # test_sampler = None
+    # for key in test_keys:
+    #     args.img_size = 224
+    #     test_ds = LP_CTA_Dataset(keys=key, mode='val', args=args)
+    #     data_loader = torch.utils.data.DataLoader(
+    #         test_ds, batch_size=args.batch_size, shuffle=False,
+    #         num_workers=args.workers, pin_memory=True, sampler=test_sampler, drop_last=False
+    #     )
+    #     print(key)
+    #     for i, tup in enumerate(data_loader):
+    #         if args.gpu is not None:
+    #             img = tup[0].float().cuda(args.gpu, non_blocking=True)
+    #             label = tup[1].long().cuda(args.gpu, non_blocking=True)
+    #             print(img.shape, label.shape)
